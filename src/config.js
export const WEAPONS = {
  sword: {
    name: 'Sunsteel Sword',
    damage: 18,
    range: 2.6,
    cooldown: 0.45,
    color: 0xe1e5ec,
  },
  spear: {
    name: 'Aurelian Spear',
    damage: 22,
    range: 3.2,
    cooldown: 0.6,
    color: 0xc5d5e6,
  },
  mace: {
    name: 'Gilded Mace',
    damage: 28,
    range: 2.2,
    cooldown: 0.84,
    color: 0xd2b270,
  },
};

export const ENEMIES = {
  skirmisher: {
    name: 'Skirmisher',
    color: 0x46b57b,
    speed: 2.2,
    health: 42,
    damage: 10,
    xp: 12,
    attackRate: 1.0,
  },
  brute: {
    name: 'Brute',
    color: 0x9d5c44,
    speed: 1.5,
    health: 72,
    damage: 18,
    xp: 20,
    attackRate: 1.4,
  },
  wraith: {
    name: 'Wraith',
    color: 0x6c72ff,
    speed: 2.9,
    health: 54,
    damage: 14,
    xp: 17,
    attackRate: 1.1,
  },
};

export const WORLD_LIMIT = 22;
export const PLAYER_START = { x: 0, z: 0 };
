@@ -1,0 +1,217 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;700&display=swap');
+
+:root {
+  --bg: #08141d;
+  --panel: rgba(12, 20, 30, 0.74);
+  --panel-strong: rgba(17, 29, 41, 0.9);
+  --border: rgba(159, 209, 255, 0.34);
+  --gold: #f5d58b;
+  --text: #edfaff;
+  --muted: #9cb9cc;
+  --health: #7de285;
+  --mana: #77d0ff;
+  --danger: #ff7a7a;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #app {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #18304a 0%, #0d1722 42%, #070d12 100%);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#top-left,
+#top-right,
+#bottom-left,
+#bottom-right {
+  position: absolute;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--panel);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.26);
+  backdrop-filter: blur(8px);
+}
+
+#top-left {
+  top: 18px;
+  left: 18px;
+  width: 420px;
+  padding: 16px 18px 12px;
+}
+
+#top-right {
+  top: 18px;
+  right: 18px;
+  width: 310px;
+  padding: 14px 16px;
+}
+
+#bottom-left {
+  left: 18px;
+  bottom: 18px;
+  width: 260px;
+  padding: 14px 16px;
+}
+
+#bottom-right {
+  right: 18px;
+  bottom: 18px;
+  width: 310px;
+  padding: 14px 16px;
+}
+
+.hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  width: 54px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bar {
+  position: relative;
+  flex: 1;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-radius: inherit;
+}
+
+.bar-fill.health { background: linear-gradient(90deg, #78eb8a, #a8f0b0); }
+.bar-fill.xp { background: linear-gradient(90deg, #69d3ff, #d7f0ff); }
+.bar-fill.mana { background: linear-gradient(90deg, #64b8ff, #d0ebff); }
+
+.value {
+  min-width: 62px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#title-badge {
+  position: absolute;
+  left: 50%;
+  top: 18px;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(10, 20, 30, 0.7);
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  font-family: 'Cinzel', serif;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+#message {
+  position: absolute;
+  left: 50%;
+  bottom: 140px;
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 213, 139, 0.3);
+  background: rgba(17, 13, 9, 0.74);
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+#message.visible { opacity: 1; }
+
+#inventory {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.item-pill {
+  padding: 6px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.02);
+  color: var(--text);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.item-pill.equipped {
+  border-color: rgba(245, 213, 139, 0.7);
+  background: rgba(245, 213, 139, 0.18);
+  color: var(--gold);
+}
+
+#controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.controls-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.key {
+  display: inline-block;
+  min-width: 26px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  text-align: center;
+}
