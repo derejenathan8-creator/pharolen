@@ -283,7 +283,8 @@ export class Game {
     ];
 
     for (const [x, z] of spawns) {
-      const type = Math.random() < 0.55 ? 'skirmisher' : Math.random() < 0.5 ? 'brute' : 'wraith';
+      const typeRoll = Math.random();
+      const type = typeRoll < 0.55 ? 'skirmisher' : typeRoll < 0.82 ? 'brute' : 'wraith';
       this.enemies.push(new Enemy(this.scene, type, x, z, this));
     }
   }
@@ -305,7 +306,8 @@ export class Game {
 
   updateHUD() {
     const healthPct = (this.player.health / this.player.maxHealth) * 100;
-    const xpPct = (this.player.exp / (this.player.level * 60)) * 100;
+    const xpGoal = this.player.level * 60;
+    const xpPct = xpGoal > 0 ? (this.player.exp / xpGoal) * 100 : 0;
     const manaPct = (this.player.mana / this.player.maxMana) * 100;
 
     this.ui.health.style.width = `${Math.max(0, healthPct)}%`;
@@ -313,7 +315,7 @@ export class Game {
     this.ui.mana.style.width = `${Math.max(0, manaPct)}%`;
 
     this.ui.healthValue.textContent = `${Math.ceil(this.player.health)} / ${this.player.maxHealth}`;
-    this.ui.xpValue.textContent = `${Math.ceil(this.player.exp)} / ${this.player.level * 60}`;
+    this.ui.xpValue.textContent = `${Math.ceil(this.player.exp)} / ${xpGoal}`;
     this.ui.manaValue.textContent = `${Math.ceil(this.player.mana)} / ${this.player.maxMana}`;
     this.ui.level.textContent = `Lv. ${this.player.level}`;
     this.ui.gold.textContent = String(this.player.gold);

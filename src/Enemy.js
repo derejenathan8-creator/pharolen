@@ -6,6 +6,10 @@ export class Enemy {
     this.game = game;
     this.type = type;
     const config = ENEMIES[type];
+    if (!config) {
+      throw new Error(`Unknown enemy type: ${type}`);
+    }
+
     this.config = config;
     this.dead = false;
     this.health = config.health;
@@ -43,11 +47,13 @@ export class Enemy {
     const distance = diff.length();
 
     if (distance > 0.1) {
-      diff.y = 0;
-      diff.normalize();
-      this.group.position.addScaledVector(diff, this.config.speed * dt);
-      this.group.lookAt(player.group.position.x, this.group.position.y + 1, player.group.position.z);
-      this.group.rotation.y += Math.PI;
+      const moveDir = diff.clone();
+      moveDir.y = 0;
+      if (moveDir.lengthSq() > 0.0001) {
+        moveDir.normalize();
+        this.group.position.addScaledVector(moveDir, this.config.speed * dt);
+        this.group.lookAt(player.group.position.x, this.group.position.y + 1.1, player.group.position.z);
+      }
     }
 
     if (distance < 1.8 && this.attackCooldown <= 0) {

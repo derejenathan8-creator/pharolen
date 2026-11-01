@@ -20,10 +20,12 @@ export class Loot {
 
   update(dt, player) {
     if (this.collected) return;
+
     this.mesh.rotation.y += dt * 2.4;
     this.mesh.position.y += Math.sin(performance.now() * 0.008) * 0.003;
 
-    const distance = this.mesh.position.distanceTo(player.group.position);
+    const playerPos = player.group.position.clone().add(new THREE.Vector3(0, 0.8, 0));
+    const distance = this.mesh.position.distanceTo(playerPos);
     if (distance < 1.4) {
       this.collected = true;
       player.gold += this.value;

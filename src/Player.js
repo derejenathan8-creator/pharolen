@@ -88,8 +88,8 @@ export class Player {
     this.dashCooldown = Math.max(0, this.dashCooldown - dt);
     this.invulnerable = Math.max(0, this.invulnerable - dt);
 
-    let moveX = Number(input.right) - Number(input.left);
-    let moveZ = Number(input.down) - Number(input.up);
+    const moveX = Number(input.right) - Number(input.left);
+    const moveZ = Number(input.down) - Number(input.up);
 
     if (moveX !== 0 || moveZ !== 0) {
       const xz = new THREE.Vector3(moveX, 0, moveZ);
@@ -136,13 +136,18 @@ export class Player {
     this.attackCooldown = weapon.cooldown;
 
     let landed = false;
+    const facing = new THREE.Vector3(0, 0, 1).applyAxisAngle(new THREE.Vector3(0, 1, 0), this.group.rotation.y);
+
     for (const enemy of this.game.enemies) {
       if (enemy.dead) continue;
       const diff = enemy.group.position.clone().sub(this.group.position);
       const distance = diff.length();
-      const dot = diff.clone().normalize().dot(new THREE.Vector3(0, 0, 1).applyAxisAngle(new THREE.Vector3(0, 1, 0), this.group.rotation.y));
+      if (distance <= 0.0001) continue;
 
-      if (distance <= weapon.range && dot > -0.1) {
+      const dirToEnemy = diff.clone().normalize();
+      const dot = dirToEnemy.dot(facing);
+
+      if (distance <= weapon.range && dot > 0.1) {
         enemy.takeDamage(weapon.damage);
         landed = true;
       }
@@ -166,8 +171,10 @@ export class Player {
 
   gainXP(amount) {
     this.exp += amount;
-    while (this.exp >= this.level * 60) {
-      this.exp -= this.level * 60;
+    const xpGoal = this.level * 60;
+
+    while (this.exp >= xpGoal) {
+      this.exp -= xpGoal;
       this.level += 1;
       this.maxHealth += 10;
       this.health = this.maxHealth;
